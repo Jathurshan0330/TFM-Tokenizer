@@ -1,6 +1,7 @@
 # Tokenizing Single-Channel EEG with Time-Frequency Motif Learning
 
-[Story_fig_test_5.pdf](https://github.com/user-attachments/files/22553965/Story_fig_test_5.pdf)
+
+<img width="983" height="220" alt="Story_fig_test_5" src="https://github.com/user-attachments/assets/55692cbc-87c5-4a7d-bf33-03e113778d97" />
 
 
 ## Abstract
