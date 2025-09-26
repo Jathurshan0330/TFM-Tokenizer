@@ -1,0 +1,97 @@
+tokenizer_training_pretrain:    
+  batch_size: 256 
+  num_workers: 8
+  experiment_path: './results/tfm_token'  
+  optimizer: AdamW
+  lr: 0.001 
+  weight_decay: 0.00001 
+  beta1: 0.9
+  beta2: 0.99
+  num_pretrain_epochs: 100 #100 
+  warmup_epochs: 10 #10 
+  final_lr: 0.005 
+
+
+tokenizer_training_TUEV:    
+  batch_size: 256 
+  num_workers: 8
+  experiment_path: './results/tfm_token'  
+  optimizer: AdamW
+  lr: 0.001 
+  weight_decay: 0.00001 
+  beta1: 0.9
+  beta2: 0.99
+  num_pretrain_epochs: 1 #100 
+  warmup_epochs: 0 #10 
+  final_lr: 0.005 
+
+tokenizer_training_TUAB:    
+  batch_size: 256 
+  num_workers: 8
+  experiment_path: './results/tfm_token'  
+  optimizer: AdamW
+  lr: 0.001  
+  weight_decay: 0.00001 
+  beta1: 0.9
+  beta2: 0.99
+  num_pretrain_epochs: 100 
+  warmup_epochs: 10 
+  final_lr: 0.005 
+  
+
+tokenizer_training_IIIC:    
+  batch_size: 256 
+  num_workers: 8
+  experiment_path: './results/tfm_token'  
+  optimizer: AdamW
+  lr: 0.001 
+  weight_decay: 0.00001 
+  beta1: 0.9
+  beta2: 0.99
+  num_pretrain_epochs: 100 
+  warmup_epochs: 10 
+  final_lr: 0.005 
+
+tokenizer_training_CHBMIT:    
+  batch_size: 256 
+  num_workers: 8
+  experiment_path: './results/tfm_token'  
+  optimizer: AdamW
+  lr: 0.001 # 
+  weight_decay: 0.00001 
+  beta1: 0.9
+  beta2: 0.99
+  num_pretrain_epochs: 100 
+  warmup_epochs: 10 
+  final_lr: 0.005 
+
+
+
+
+mtp_training:
+  batch_size: 512 
+  num_workers: 8
+  experiment_path: './results/tfm_token'  
+  optimizer: AdamW
+  lr: 0.001 
+  weight_decay: 0.00001 
+  beta1: 0.9
+  beta2: 0.99
+  num_pretrain_epochs: 1 #50 
+  warmup_epochs: 0 #5
+  final_lr: 0.005 
+
+
+finetuning:
+  batch_size: 512 
+  num_workers: 8
+  experiment_path: './results/tfm_token'  
+  optimizer: AdamW
+  lr: 0.001 
+  weight_decay: 0.00001
+  beta1: 0.9
+  beta2: 0.999
+  num_pretrain_epochs: 1 #50 
+  warmup_epochs: 0 #5 
+  final_lr: 0.005 
+  label_smoothing: 0.1

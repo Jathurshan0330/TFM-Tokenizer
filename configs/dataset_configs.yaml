@@ -1,0 +1,50 @@
+# dataset_configs.yaml
+# This file contains the configuration for the datasets used in the experiments.
+# Ensure to set the correct paths to the data directories.(data_dir)
+
+
+
+TUAB:
+    data_dir: '[PATH_TO_PROCESSED_DATA]' 
+    channels: ''
+    num_classes: 1  
+    num_channels: 16
+    sampling_rate: 256
+    signal_length: 10
+    classification_task: 'binary'
+
+TUEV:
+    data_dir: '[PATH_TO_PROCESSED_DATA]' 
+    channels: ''
+    num_classes: 6
+    num_channels: 16 
+    sampling_rate: 256
+    signal_length: 5
+    classification_task: 'multi_class'
+
+CHBMIT:
+    data_dir: '[PATH_TO_PROCESSED_DATA]' 
+    channels: ''
+    num_classes: 1
+    num_channels: 16
+    sampling_rate: 256
+    signal_length: 10
+    classification_task: 'binary'
+
+IIIC:
+    data_dir: '[PATH_TO_PROCESSED_DATA]' 
+    channels: ''
+    num_classes: 6
+    num_channels: 16
+    sampling_rate: 200
+    signal_length: 10
+    classification_task: 'multi_class'
+
+EarEEG:
+    data_dir: '[PATH_TO_PROCESSED_DATA]' 
+    channels: ''
+    num_classes: 6
+    num_channels: 4
+    sampling_rate: 250
+    signal_length: 30
+    classification_task: 'multi_class'

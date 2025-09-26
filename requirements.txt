@@ -1,0 +1,17 @@
+einops==0.8.0
+lightning==2.2.3
+linear_attention_transformer==0.19.1
+matplotlib==3.8.4
+mne==1.6.1
+neurokit2==0.2.10
+numpy==1.23.5
+pandas==1.5.3
+pyEDFlib==0.1.38
+pyhealth==1.1.6
+PyYAML==6.0.2
+Requests==2.32.3
+scipy==1.15.1
+timm==1.0.14
+torch==2.2.2
+tqdm==4.66.2
+wfdb==4.1.2
