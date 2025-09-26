@@ -44,6 +44,7 @@ The ./pretrained_weights directory provides our pretrained weights for both the 
 We also provide ./token_visualization_samples.ipynb notebook with code to visualize the tokens from our tokenizer.
 
 ## Citation
+If you find our work or this repository useful, please consider giving a star ⭐ and citation.
 ```
 @article{pradeepkumar2025single,
   title={Single-channel eeg tokenization through time-frequency modeling},
