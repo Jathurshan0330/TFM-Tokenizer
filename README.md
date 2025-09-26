@@ -1,5 +1,8 @@
 # Tokenizing Single-Channel EEG with Time-Frequency Motif Learning
 
+[Story_fig_test_5.pdf](https://github.com/user-attachments/files/22553965/Story_fig_test_5.pdf)
+
+
 ## Abstract
 Foundation models are reshaping EEG analysis, yet an important problem of EEG tokenization remains a challenge. This paper presents TFM-Tokenizer, a novel tokenization framework that learns a vocabulary of time-frequency motifs from single-channel EEG signals and encodes them into discrete tokens. We propose a dual-path architecture with time–frequency masking to capture robust motif representations, and it is model-agnostic, supporting both lightweight transformers and existing foundation models for downstream tasks. Our study demonstrates three key benefits:
 Accuracy: Experiments on four diverse EEG benchmarks demonstrate consistent performance gains across both single- and multi-dataset pretraining settings, achieving up to 17% improvement in Cohen’s Kappa over strong baselines. Generalization: Moreover, as a plug-and-play component, it consistently boosts the performance of diverse foundation models, including BIOT and LaBraM. Scalability: By operating at the single-channel level rather than relying on the strict 10–20 EEG system, our method has the potential to be device-agnostic. Experiments on ear-EEG sleep staging, which differs from the pretraining data in signal format, channel configuration, recording device, and task, show that our tokenizer outperforms baselines by 14%. A comprehensive token analysis reveals strong class-discriminative, frequency-aware, and consistent structure, enabling improved representation quality and interpretability.
