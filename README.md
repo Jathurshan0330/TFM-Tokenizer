@@ -45,7 +45,12 @@ We also provide ./token_visualization_samples.ipynb notebook with code to visual
 
 ## Citation
 ```
-
+@article{pradeepkumar2025single,
+  title={Single-channel eeg tokenization through time-frequency modeling},
+  author={Pradeepkumar, Jathurshan and Piao, Xihao and Chen, Zheng and Sun, Jimeng},
+  journal={arXiv preprint arXiv:2502.16060},
+  year={2025}
+}
 ```
 
 We appreciate your interest in our work! 😃😃😃😃😃
