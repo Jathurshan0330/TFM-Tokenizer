@@ -48,6 +48,6 @@ We also provide ./token_visualization_samples.ipynb notebook with code to visual
 
 ```
 
-We appreciate your interest in our work!
+We appreciate your interest in our work! 😃😃😃😃😃
 
 
