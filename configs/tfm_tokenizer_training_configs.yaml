@@ -21,8 +21,8 @@ tokenizer_training_TUEV:
   weight_decay: 0.00001 
   beta1: 0.9
   beta2: 0.99
-  num_pretrain_epochs: 1 #100 
-  warmup_epochs: 0 #10 
+  num_pretrain_epochs: 100 #100 
+  warmup_epochs: 10 #10 
   final_lr: 0.005 
 
 tokenizer_training_TUAB:    
@@ -77,8 +77,8 @@ mtp_training:
   weight_decay: 0.00001 
   beta1: 0.9
   beta2: 0.99
-  num_pretrain_epochs: 1 #50 
-  warmup_epochs: 0 #5
+  num_pretrain_epochs: 50 #50 
+  warmup_epochs: 5 #5
   final_lr: 0.005 
 
 
@@ -91,7 +91,7 @@ finetuning:
   weight_decay: 0.00001
   beta1: 0.9
   beta2: 0.999
-  num_pretrain_epochs: 1 #50 
-  warmup_epochs: 0 #5 
+  num_pretrain_epochs: 50 #50 
+  warmup_epochs: 5 #5 
   final_lr: 0.005 
   label_smoothing: 0.1
