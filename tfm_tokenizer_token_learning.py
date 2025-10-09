@@ -105,8 +105,8 @@ class Pl_tfm_tokenizer_token_learning(pl.LightningModule):
         quant_sym_loss, _, _ = self.vqvae.vec_quantizer_loss(quant_in_sym,quant_out_sym)
         
         weigths = torch.ones_like(x).detach()
-        recon_loss =  weighted_sum_mse_loss(recon_out[mask == 0],x[mask == 0],weigths[mask == 0])
-        recon_loss_sym =  weighted_sum_mse_loss(recon_out_sym[masked_sym == 0],x[masked_sym == 0],weigths[masked_sym == 0])
+        recon_loss =  weighted_sum_mse_loss(recon_out,x,weigths)
+        recon_loss_sym =  weighted_sum_mse_loss(recon_out_sym,x,weigths)
         
         recon_loss = recon_loss + recon_loss_sym
         quant_loss = quant_loss + quant_sym_loss
