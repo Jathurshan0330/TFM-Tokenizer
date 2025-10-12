@@ -280,7 +280,7 @@ if __name__ == "__main__":
         logger = logger,
         deterministic = True,
         fast_dev_run = False ,# for development purpose only
-        precision='bf16'
+        # precision='bf16'
     )
     
     trainer.fit(pl_vqvae, 
