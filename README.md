@@ -1,4 +1,4 @@
-# Tokenizing Single-Channel EEG with Time-Frequency Motif Learning
+# Tokenizing Single-Channel EEG with Time-Frequency Motif Learning - ICLR 2026
 
 
 <img width="983" height="220" alt="Story_fig_test_5" src="https://github.com/user-attachments/assets/55692cbc-87c5-4a7d-bf33-03e113778d97" />
