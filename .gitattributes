@@ -1,0 +1,9 @@
+# Disable Notebook detection entirely
+*.ipynb linguist-detectable=false
+
+# Disable all JSON from counting toward language stats
+*.json linguist-detectable=false
+
+# Force Python as primary language
+*.py linguist-language=Python
+*.py linguist-detectable=true
