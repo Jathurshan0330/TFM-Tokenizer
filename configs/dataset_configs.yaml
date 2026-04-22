@@ -23,7 +23,7 @@ TUEV:
     classification_task: 'multi_class'
 
 CHBMIT:
-    data_dir: '[PATH_TO_PROCESSED_DATA]' 
+    data_dir: '/srv/local/data/physionet.org/files/chbmit/1.0.0/clean_segments/' 
     channels: ''
     num_classes: 1
     num_channels: 16
