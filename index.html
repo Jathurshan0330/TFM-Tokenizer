@@ -4,534 +4,365 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TFM-Tokenizer | Tokenizing Single-Channel EEG with Time-Frequency Motif Learning</title>
-
-  <!-- SEO & Social -->
-  <meta name="description" content="TFM-Tokenizer: A novel tokenization framework that learns time-frequency motifs from single-channel EEG signals. ICLR 2026.">
+  <meta name="description" content="TFM-Tokenizer: A novel EEG tokenization framework that learns time-frequency motifs from single-channel signals. ICLR 2026.">
   <meta property="og:title" content="TFM-Tokenizer | ICLR 2026">
   <meta property="og:description" content="Tokenizing Single-Channel EEG with Time-Frequency Motif Learning">
   <meta property="og:type" content="website">
-  <!-- <meta property="og:image" content="static/images/social_preview.png"> -->
-
-  <!-- Fonts -->
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-
-  <!-- Academicons & Font Awesome -->
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
   <style>
-    :root {
-      --bg: #FAFAF8;
-      --bg-alt: #F0EFEB;
-      --text: #1A1A1A;
-      --text-secondary: #555;
-      --accent: #1B6B4A;
-      --accent-light: #E8F5EE;
-      --accent-hover: #145237;
-      --border: #DDD;
-      --card-bg: #FFFFFF;
-      --code-bg: #F4F3EF;
-      --highlight-a: #2563EB;
-      --highlight-b: #DC2626;
-      --highlight-c: #7C3AED;
-      --serif: 'Source Serif 4', Georgia, serif;
-      --sans: 'DM Sans', system-ui, sans-serif;
-      --mono: 'JetBrains Mono', monospace;
-      --max-w: 900px;
-      --max-w-wide: 1080px;
-    }
-
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      font-family: var(--sans);
-      color: var(--text);
-      background: var(--bg);
-      line-height: 1.7;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    /* ─── Hero ─── */
-    .hero {
-      position: relative;
-      padding: 80px 24px 60px;
-      text-align: center;
-      background: linear-gradient(180deg, var(--accent-light) 0%, var(--bg) 100%);
-      overflow: hidden;
-    }
-    .hero::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(circle at 20% 30%, rgba(27,107,74,.06) 0%, transparent 50%),
-        radial-gradient(circle at 80% 70%, rgba(37,99,235,.04) 0%, transparent 50%);
-      pointer-events: none;
-    }
-
-    .venue-badge {
-      display: inline-block;
-      font-family: var(--sans);
-      font-weight: 600;
-      font-size: 13px;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      color: var(--accent);
-      background: var(--card-bg);
-      border: 1.5px solid var(--accent);
-      border-radius: 100px;
-      padding: 6px 20px;
-      margin-bottom: 28px;
-      animation: fadeDown .6s ease-out both;
-    }
-
-    .hero h1 {
-      font-family: var(--serif);
-      font-weight: 700;
-      font-size: clamp(28px, 4.5vw, 48px);
-      line-height: 1.2;
-      max-width: 780px;
-      margin: 0 auto 28px;
-      animation: fadeDown .6s .1s ease-out both;
-    }
-
-    .authors {
-      font-size: 17px;
-      color: var(--text-secondary);
-      margin-bottom: 6px;
-      animation: fadeDown .6s .2s ease-out both;
-    }
-    .authors a {
-      color: var(--text);
-      text-decoration: none;
-      border-bottom: 1px dashed var(--border);
-      transition: color .2s, border-color .2s;
-    }
-    .authors a:hover { color: var(--accent); border-color: var(--accent); }
-
-    .affiliations {
-      font-size: 14px;
-      color: var(--text-secondary);
-      margin-bottom: 32px;
-      animation: fadeDown .6s .25s ease-out both;
-    }
-
-    .hero-links {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 12px;
-      animation: fadeDown .6s .35s ease-out both;
-    }
-
-    .hero-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-family: var(--sans);
-      font-size: 14px;
-      font-weight: 600;
-      padding: 10px 22px;
-      border-radius: 8px;
-      text-decoration: none;
-      transition: all .2s;
-    }
-    .hero-btn.primary {
-      background: var(--accent);
-      color: #fff;
-    }
-    .hero-btn.primary:hover { background: var(--accent-hover); transform: translateY(-1px); }
-    .hero-btn.secondary {
-      background: var(--card-bg);
-      color: var(--text);
-      border: 1.5px solid var(--border);
-    }
-    .hero-btn.secondary:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-1px); }
-
-    /* ─── Sections ─── */
-    section { padding: 60px 24px; }
-    .container { max-width: var(--max-w); margin: 0 auto; }
-    .container.wide { max-width: var(--max-w-wide); }
-
-    .section-label {
-      font-family: var(--sans);
-      font-weight: 600;
-      font-size: 12px;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 12px;
-    }
-
-    h2 {
-      font-family: var(--serif);
-      font-weight: 600;
-      font-size: 28px;
-      margin-bottom: 24px;
-      line-height: 1.3;
-    }
-
-    p + p { margin-top: 16px; }
-
-    /* ─── Abstract ─── */
-    .abstract-section { background: var(--bg); }
-    .abstract-text {
-      font-family: var(--serif);
-      font-size: 17px;
-      line-height: 1.85;
-      color: var(--text);
-    }
-
-    /* ─── Highlights ─── */
-    .highlights-section { background: var(--bg-alt); }
-    .highlights-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 20px;
-      margin-top: 8px;
-    }
-    .highlight-card {
-      background: var(--card-bg);
-      border-radius: 12px;
-      padding: 28px 24px;
-      border: 1px solid var(--border);
-      transition: transform .2s, box-shadow .2s;
-    }
-    .highlight-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,.06); }
-    .highlight-icon {
-      width: 42px;
-      height: 42px;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      color: #fff;
-      margin-bottom: 16px;
-    }
-    .highlight-card:nth-child(1) .highlight-icon { background: var(--highlight-a); }
-    .highlight-card:nth-child(2) .highlight-icon { background: var(--accent); }
-    .highlight-card:nth-child(3) .highlight-icon { background: var(--highlight-c); }
-    .highlight-card h3 {
-      font-family: var(--sans);
-      font-weight: 700;
-      font-size: 18px;
-      margin-bottom: 8px;
-    }
-    .highlight-card p {
-      font-size: 14.5px;
-      color: var(--text-secondary);
-      line-height: 1.65;
-    }
-    .stat {
-      font-family: var(--mono);
-      font-weight: 500;
-      color: var(--text);
-    }
-
-    /* ─── Figure / Method ─── */
-    .method-section { background: var(--bg); }
-    .figure-wrapper {
-      margin-top: 24px;
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      overflow: hidden;
-    }
-    .figure-wrapper img {
-      width: 100%;
-      display: block;
-    }
-    .figure-caption {
-      padding: 16px 24px;
-      font-size: 13.5px;
-      color: var(--text-secondary);
-      line-height: 1.6;
-      border-top: 1px solid var(--border);
-    }
-    .figure-caption strong { color: var(--text); }
-
-    /* ─── Image placeholder ─── */
-    .img-placeholder {
-      width: 100%;
-      min-height: 340px;
-      background: linear-gradient(135deg, var(--accent-light) 0%, #E8EDFF 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--text-secondary);
-      font-size: 14px;
-      font-style: italic;
-    }
-
-    /* ─── Citation ─── */
-    .citation-section { background: var(--bg-alt); }
-    .citation-block {
-      position: relative;
-      background: var(--code-bg);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 24px;
-      font-family: var(--mono);
-      font-size: 13px;
-      line-height: 1.7;
-      overflow-x: auto;
-      white-space: pre-wrap;
-      word-break: break-word;
-    }
-    .copy-btn {
-      position: absolute;
-      top: 12px;
-      right: 12px;
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 6px 12px;
-      font-family: var(--sans);
-      font-size: 12px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all .2s;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-    .copy-btn:hover { border-color: var(--accent); color: var(--accent); }
-
-    /* ─── Footer ─── */
-    footer {
-      padding: 40px 24px;
-      text-align: center;
-      font-size: 13px;
-      color: var(--text-secondary);
-      border-top: 1px solid var(--border);
-    }
-    footer a { color: var(--accent); text-decoration: none; }
-    footer a:hover { text-decoration: underline; }
-
-    /* ─── Animations ─── */
-    @keyframes fadeDown {
-      from { opacity: 0; transform: translateY(16px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .fade-in {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity .5s ease-out, transform .5s ease-out;
-    }
-    .fade-in.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* ─── Responsive ─── */
-    @media (max-width: 640px) {
-      .hero { padding: 60px 20px 40px; }
-      section { padding: 44px 20px; }
-      .highlights-grid { grid-template-columns: 1fr; }
-      .hero-links { flex-direction: column; align-items: center; }
-    }
+    :root{--bg:#fff;--bg-alt:#f8f9fc;--bg-card:#fff;--text:#1a1a2e;--text-secondary:#4a5568;--text-muted:#8895a7;--accent:#fc5914;--accent-hover:#fc5914;--accent-light:#fcd7c8;--blue:#3b82f6;--blue-light:#eff6ff;--purple:#7c3aed;--purple-light:#f3f0ff;--amber:#f59e0b;--red:#ef4444;--red-light:#fef2f2;--green:#10b981;--border:#e5e7eb;--border-light:#f0f1f3;--shadow-md:0 4px 16px rgba(0,0,0,.06);--serif:'Newsreader',Georgia,serif;--sans:'DM Sans',system-ui,sans-serif;--mono:'IBM Plex Mono',monospace;--max-w:860px;--max-w-wide:1020px;--radius:12px}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:var(--sans);color:var(--text);background:var(--bg);line-height:1.7;-webkit-font-smoothing:antialiased}
+    ::selection{background:var(--accent-light);color:var(--accent)}
+    .hero{position:relative;padding:72px 24px 56px;text-align:center;overflow:hidden}
+    .hero::before{content:'';position:absolute;top:-120px;left:50%;transform:translateX(-50%);width:900px;height:500px;background:radial-gradient(ellipse,rgba(13,148,136,.07) 0%,transparent 70%);pointer-events:none}
+    .hero-canvas{position:absolute;inset:0;z-index:0;opacity:.12}
+    .hero-content{position:relative;z-index:2;max-width:800px;margin:0 auto}
+    .venue-badge{display:inline-flex;align-items:center;gap:6px;font-family:var(--sans);font-weight:600;font-size:16px;letter-spacing:1px;text-transform:uppercase;color:var(--accent);background:var(#000000);border-radius:100px;padding:6px 18px;margin-bottom:28px;animation:fadeUp .6s ease-out both}
+    .hero h1{font-family:var(--serif);font-weight:700;font-size:clamp(28px,4.5vw,46px);line-height:1.2;color:var(--text);margin-bottom:24px;animation:fadeUp .6s .08s ease-out both}
+    .authors-row{display:flex;justify-content:center;flex-wrap:wrap;gap:4px 20px;margin-bottom:6px;animation:fadeUp .6s .16s ease-out both}
+    .author-link{font-size:15.5px;color:var(--text);text-decoration:none;transition:color .2s}
+    .author-link:hover{color:var(--accent)}
+    .author-link sup{font-size:10px;color:var(--text-muted);margin-left:1px}
+    .affiliations{font-size:13.5px;color:var(--text-secondary);margin-bottom:32px;animation:fadeUp .6s .2s ease-out both}
+    .affiliations sup{font-size:9px;margin-right:1px;color:var(--text-muted)}
+    .hero-links{display:flex;justify-content:center;flex-wrap:wrap;gap:8px;animation:fadeUp .6s .28s ease-out both}
+    .hero-btn{display:inline-flex;align-items:center;gap:6px;font-family:var(--sans);font-size:13px;font-weight:600;padding:8px 16px;border-radius:8px;text-decoration:none;transition:all .2s;border:1px solid var(--border);background:var(--bg);color:var(--text)}
+    .hero-btn:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-1px);box-shadow:0 1px 3px rgba(0,0,0,.04)}
+    .hero-btn i,.hero-btn .ai{font-size:14px}
+    .hero-btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+    .hero-btn.primary:hover{background:var(--accent-hover);border-color:var(--accent-hover);box-shadow:0 4px 16px rgba(13,148,136,.25)}
+    section{padding:56px 24px}
+    .container{max-width:var(--max-w);margin:0 auto}
+    .container.wide{max-width:var(--max-w-wide)}
+    .section-label{font-family:var(--sans);font-weight:900;font-size:24px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+    h2{font-family:var(--serif);font-weight:600;font-size:clamp(22px,3vw,28px);margin-bottom:20px;line-height:1.3}
+    .divider{max-width:var(--max-w);margin:0 auto;height:1px;background:var(--border-light)}
+    p+p{margin-top:14px}
+    .abstract-section{background:var(--bg-alt)}
+    .abstract-text{font-size:16px;line-height:1.85;color:var(--text-secondary)}
+    .abstract-text strong{color:var(--text);font-weight:600}
+    .motivation-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+    .motivation-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:22px;transition:box-shadow .2s}
+    .motivation-card:hover{box-shadow:var(--shadow-md)}
+    .motivation-card .icon{font-size:22px;margin-bottom:10px}
+    .motivation-card h4{font-size:14px;font-weight:700;margin-bottom:6px}
+    .motivation-card p{font-size:13px;color:var(--text-secondary);line-height:1.6}
+    .highlights-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:12px}
+    .highlight-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:24px 20px;text-align:center;transition:all .25s}
+    .highlight-card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px)}
+    .highlight-stat{font-family:var(--mono);font-weight:500;font-size:32px;margin-bottom:2px}
+    .highlight-card:nth-child(1) .highlight-stat{color:var(--accent)}
+    .highlight-card:nth-child(2) .highlight-stat{color:var(--blue)}
+    .highlight-card:nth-child(3) .highlight-stat{color:var(--purple)}
+    .highlight-card h3{font-size:14px;font-weight:700;margin-bottom:6px}
+    .highlight-tag{display:inline-block;font-size:11px;font-weight:600;padding:3px 10px;border-radius:100px;margin-bottom:10px}
+    .highlight-card:nth-child(1) .highlight-tag{background:var(--accent-light);color:var(--accent)}
+    .highlight-card:nth-child(2) .highlight-tag{background:var(--blue-light);color:var(--blue)}
+    .highlight-card:nth-child(3) .highlight-tag{background:var(--purple-light);color:var(--purple)}
+    .highlight-card p{font-size:13px;color:var(--text-secondary);line-height:1.6}
+    .figure-wrapper{margin-top:20px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+    .figure-wrapper img{width:100%;display:block}
+    .img-placeholder{width:100%;min-height:340px;background:linear-gradient(135deg,var(--bg-alt) 0%,#eef2f7 50%,var(--bg-alt) 100%);display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:13px;font-family:var(--mono);flex-direction:column;gap:6px}
+    .img-placeholder code{background:rgba(0,0,0,.04);padding:3px 10px;border-radius:6px;font-size:12px}
+    .figure-caption{padding:14px 20px;font-size:12.5px;color:var(--text-secondary);line-height:1.6;border-top:1px solid var(--border-light)}
+    .figure-caption strong{color:var(--text)}
+    .pipeline{display:flex;align-items:stretch;gap:0;margin-top:20px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+    .pipe-step{flex:1;padding:22px 16px;text-align:center;border-right:1px solid var(--border-light)}
+    .pipe-step:last-child{border-right:none}
+    .pipe-num{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:var(--accent-light);color:var(--accent);font-family:var(--mono);font-size:12px;font-weight:600;margin-bottom:10px}
+    .pipe-step h4{font-size:12.5px;font-weight:700;margin-bottom:4px}
+    .pipe-step p{font-size:11px;color:var(--text-muted);line-height:1.5}
+    .dataset-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:14px}
+    .dataset-chip{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center}
+    .dataset-chip h4{font-family:var(--mono);font-size:14px;font-weight:500;margin-bottom:4px}
+    .dataset-chip p{font-size:11px;color:var(--text-muted);line-height:1.4}
+    .dtag{display:inline-block;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;padding:2px 8px;border-radius:100px;margin-top:8px}
+    .dtag-s{background:var(--red-light);color:var(--red)}
+    .dtag-a{background:var(--blue-light);color:var(--blue)}
+    .dtag-e{background:var(--purple-light);color:var(--purple)}
+    .code-block{background:#1e293b;border-radius:var(--radius);overflow:hidden;margin-top:14px}
+    .code-header{display:flex;align-items:center;gap:6px;padding:10px 16px;background:rgba(255,255,255,.04)}
+    .code-dot{width:9px;height:9px;border-radius:50%}
+    .code-dot.r{background:#ef4444}.code-dot.y{background:#f59e0b}.code-dot.g{background:#10b981}
+    .code-body{padding:16px 20px;font-family:var(--mono);font-size:12.5px;line-height:1.8;color:#cbd5e1;overflow-x:auto}
+    .code-body .cm{color:#64748b}.code-body .kw{color:#5eead4}.code-body .fl{color:#c4b5fd}
+    .citation-section{background:var(--bg-alt)}
+    .citation-wrap{position:relative}
+    .citation-block{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;padding-right:80px;font-family:var(--mono);font-size:12px;line-height:1.75;color:var(--text-secondary);overflow-x:auto;white-space:pre-wrap;word-break:break-word}
+    .copy-btn{position:absolute;top:12px;right:12px;background:var(--bg-alt);border:1px solid var(--border);border-radius:6px;padding:6px 12px;font-family:var(--sans);font-size:11px;font-weight:600;cursor:pointer;transition:all .2s;color:var(--text-muted);display:flex;align-items:center;gap:4px}
+    .copy-btn:hover{border-color:var(--accent);color:var(--accent)}
+    footer{padding:40px 24px;text-align:center;font-size:12px;color:var(--text-muted);border-top:1px solid var(--border-light)}
+    footer a{color:var(--text-secondary);text-decoration:none}
+    footer a:hover{color:var(--accent)}
+    .footer-icons{display:flex;justify-content:center;gap:20px;margin-bottom:12px}
+    .footer-icons a{font-size:16px;color:var(--text-muted);transition:color .2s}
+    .footer-icons a:hover{color:var(--accent)}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+    .fade-in{opacity:0;transform:translateY(22px);transition:opacity .5s ease-out,transform .5s ease-out}
+    .fade-in.visible{opacity:1;transform:translateY(0)}
+    .quick-start h3{font-family:var(--serif);font-size:17px;font-weight:600;margin:26px 0 10px;color:var(--text)}
+    .quick-start h3:first-of-type{margin-top:8px}
+    .quick-start hr{border:none;border-top:1px solid var(--border-light);margin:28px 0}
+    .quick-start ul{margin:10px 0 0 22px;color:var(--text-secondary);font-size:14.5px;line-height:1.75}
+    .quick-start .code-block{margin-top:10px}
+    @media(max-width:768px){.hero{padding:56px 20px 44px}section{padding:44px 20px}.highlights-grid{grid-template-columns:1fr}.motivation-grid{grid-template-columns:1fr}.pipeline{flex-direction:column}.pipe-step{border-right:none;border-bottom:1px solid var(--border-light)}.pipe-step:last-child{border-bottom:none}.dataset-row{grid-template-columns:1fr 1fr}.hero-links{gap:6px}.hero-btn{padding:7px 12px;font-size:12px}}
+    @media(max-width:480px){.dataset-row{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
-
-  <!-- ════════════ HERO ════════════ -->
   <header class="hero">
-    <div class="venue-badge">ICLR 2026 &middot; Poster</div>
-    <h1>Tokenizing Single-Channel EEG with Time-Frequency Motif Learning</h1>
-    <p class="authors">
-      <a href="https://jathurshan0330.github.io/" target="_blank">Jathurshan Pradeepkumar</a>&ensp;&middot;&ensp;
-      <a href="#">Xihao Piao</a>&ensp;&middot;&ensp;
-      <a href="#">Zheng Chen</a>&ensp;&middot;&ensp;
-      <a href="#">Jimeng Sun</a>
-    </p>
-    <p class="affiliations">University of Illinois Urbana-Champaign</p>
-    <div class="hero-links">
-      <a class="hero-btn primary" href="https://arxiv.org/abs/2502.16060" target="_blank">
-        <i class="ai ai-arxiv"></i> arXiv
-      </a>
-      <a class="hero-btn secondary" href="https://openreview.net/forum?id=2sPmWHZ8Ir" target="_blank">
-        <i class="ai ai-openreview"></i> OpenReview
-      </a>
-      <a class="hero-btn secondary" href="https://github.com/Jathurshan0330/TFM-Tokenizer" target="_blank">
-        <i class="fab fa-github"></i> Code
-      </a>
-      <a class="hero-btn secondary" href="#citation">
-        <i class="fas fa-quote-left"></i> Cite
-      </a>
+    <canvas class="hero-canvas" id="eegCanvas"></canvas>
+    <div class="hero-content">
+      <div class="venue-badge">ICLR 2026 Poster</div>
+      <h1>Tokenizing Single-Channel EEG with<br>Time-Frequency Motif Learning</h1>
+      <div class="authors-row">
+        <a class="author-link" href="https://www.jathurshanpradeepkumar.com/" target="_blank">Jathurshan Pradeepkumar<sup>1</sup></a>
+        <a class="author-link" href="https://scholar.google.ca/citations?user=kJQIo08AAAAJ" target="_blank">Xihao Piao<sup>2</sup></a>
+        <a class="author-link" href="https://zhengchen3.github.io/" target="_blank">Zheng Chen<sup>2</sup></a>
+        <a class="author-link" href="https://www.sunlab.org/" target="_blank">Jimeng Sun<sup>1</sup></a>
+      </div>
+      <p class="affiliations"><sup>1</sup>University of Illinois Urbana-Champaign &emsp; <sup>2</sup>SANKEN, Osaka University</p>
+      <div class="hero-links">
+        <a class="hero-btn primary" href="https://arxiv.org/abs/2502.16060" target="_blank"><i class="ai ai-arxiv"></i> arXiv</a>
+        <a class="hero-btn" href="https://openreview.net/forum?id=2sPmWHZ8Ir" target="_blank"><i class="ai ai-openreview"></i> OpenReview</a>
+        <a class="hero-btn" href="https://github.com/Jathurshan0330/TFM-Tokenizer" target="_blank"><i class="fab fa-github"></i> Code</a>
+        <a class="hero-btn" href="https://huggingface.co/Jathurshan/TFM-Tokenizer" target="_blank">&#129303; Model</a>
+        <a class="hero-btn" href="https://drive.google.com/file/d/18k5CoJAGzRWAsqs8-qSltVTNkp5rMnBx/view?usp=sharing" target="_blank"><i class="fas fa-image"></i> Poster</a>
+        <a class="hero-btn" href="https://drive.google.com/file/d/1za78WIW4wY9kD_TQtehQCzUTIW4CRYx-/view?usp=sharing" target="_blank"><i class="fas fa-file-powerpoint"></i> Slides</a>
+        <a class="hero-btn" href="#citation"><i class="fas fa-quote-left"></i> Cite</a>
+      </div>
     </div>
   </header>
 
-  <!-- ════════════ ABSTRACT ════════════ -->
   <section class="abstract-section">
     <div class="container fade-in">
-      <p class="section-label">Abstract</p>
+      <div class="section-label">TL;DR</div>
       <div class="abstract-text">
-        <p>
-          Foundation models are reshaping EEG analysis, yet an important problem of EEG tokenization remains a challenge.
-          This paper presents <strong>TFM-Tokenizer</strong>, a novel tokenization framework that learns a vocabulary of
-          time-frequency motifs from <em>single-channel</em> EEG signals and encodes them into discrete tokens. We propose
-          a dual-path architecture with time&ndash;frequency masking to capture robust motif representations, and it is
-          model-agnostic, supporting both lightweight transformers and existing foundation models for downstream tasks.
-        </p>
-        <p>
-          Our study demonstrates three key benefits: <strong>Accuracy</strong>&mdash;experiments on four diverse EEG benchmarks
-          demonstrate consistent performance gains, achieving up to 11% improvement in Cohen&rsquo;s Kappa over strong baselines.
-          <strong>Generalization</strong>&mdash;as a plug-and-play component, it consistently boosts the performance of diverse
-          foundation models, including BIOT and LaBraM. <strong>Scalability</strong>&mdash;by operating at the single-channel
-          level, our method is device-agnostic, and experiments on ear-EEG sleep staging show our tokenizer outperforms baselines
-          by 14%.
-        </p>
+        <p>We propose <strong>TFM-Tokenizer</strong>, a model-agnostic EEG tokenization framework that encodes <strong>single-channel</strong> EEG into discrete tokens by capturing time-frequency motifs. It improves downstream performance, enhances existing EEG foundation models as a plug-in component, and scales to other brain signal modalities like ear-EEG.</p>
       </div>
     </div>
   </section>
 
-  <!-- ════════════ KEY RESULTS ════════════ -->
-  <section class="highlights-section">
+  <div class="divider"></div>
+
+  <section>
     <div class="container fade-in">
-      <p class="section-label">Key Results</p>
-      <h2>Why TFM-Tokenizer?</h2>
-      <div class="highlights-grid">
-        <div class="highlight-card">
-          <div class="highlight-icon"><i class="fas fa-bullseye"></i></div>
-          <h3>Accuracy</h3>
-          <p>
-            Consistent performance gains across four EEG benchmarks with up to
-            <span class="stat">+11%</span> Cohen&rsquo;s Kappa improvement over strong baselines in both single- and multi-dataset pretraining settings.
-          </p>
+      <div class="section-label">Motivation - Why Tokenize EEG?</div>
+      <div class="motivation-grid">
+        <div class="motivation-card">
+          <div class="icon">&#128300;</div>
+          <p>Existing EEG foundation models rely on continuous segment-level embeddings that fail to capture diverse oscillatory waveforms and time-frequency patterns inherent in EEG.</p>
         </div>
-        <div class="highlight-card">
-          <div class="highlight-icon"><i class="fas fa-puzzle-piece"></i></div>
-          <h3>Generalization</h3>
-          <p>
-            A plug-and-play component that boosts existing foundation models like
-            <span class="stat">BIOT</span> and <span class="stat">LaBraM</span>&mdash;no architectural changes needed.
-          </p>
-        </div>
-        <div class="highlight-card">
-          <div class="highlight-icon"><i class="fas fa-expand-arrows-alt"></i></div>
-          <h3>Scalability</h3>
-          <p>
-            Device-agnostic design at the single-channel level. Outperforms baselines by
-            <span class="stat">+14%</span> on ear-EEG sleep staging&mdash;a completely different signal format and device.
-          </p>
+        <div class="motivation-card">
+          <div class="icon">&#128161;</div>
+          <p>By learning discrete tokens that encapsulate time-frequency motifs from a single channel, we build reusable, scalable representations that are device- and model-agnostic.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ════════════ METHOD OVERVIEW ════════════ -->
-  <section class="method-section">
+  <section>
+    <div class="container fade-in">
+      <div class="section-label">Key Design Considerations in EEG Tokenization</div>
+      <div class="figure-wrapper" style="margin-top:24px">
+        <img src="assets/key_challenges.png" alt="" loading="lazy">
+        <!-- <div class="img-placeholder"><span>Replace with framework figure</span><code>static/images/framework.png</code></div> -->
+        <!-- <p class="figure-caption"><strong>Figure 1.</strong> TFM-Tokenizer pretraining: dual-path encoding captures temporal and spectral features. Frequency band masking &amp; temporal masking encourage learning diverse motif representations.</p> -->
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <section style="background:var(--bg-alt)">
     <div class="container wide fade-in">
-      <p class="section-label">Method</p>
-      <h2>Framework Overview</h2>
-      <p style="color: var(--text-secondary); margin-bottom: 8px;">
-        TFM-Tokenizer uses a dual-path architecture that captures both temporal and frequency-domain features through
-        localized spectral window encoding and temporal patching. Time&ndash;frequency masking during pretraining encourages
-        robust, diverse motif representations.
-      </p>
-      <div class="figure-wrapper">
-        <!-- Replace the placeholder below with your actual framework figure -->
-        <div class="img-placeholder">
-          <!-- TO USE: replace this div with:
-               <img src="static/images/framework.png" alt="TFM-Tokenizer Framework Overview" loading="lazy"> -->
-          Replace with your framework figure &mdash; e.g. <code>static/images/framework.png</code>
-        </div>
-        <p class="figure-caption">
-          <strong>Figure 1.</strong> Overview of the TFM-Tokenizer framework. (a) TFM-Tokenizer pretraining with dual-path encoding and masked prediction.
-          (b) Frequency band and temporal masking strategy. (c) Localized spectral window encoder. (d) Downstream transformer encoder pretraining with masked token prediction.
-        </p>
+      <div class="section-label">Method</div>
+      <div class="figure-wrapper" style="margin-top:22px">
+        <img src="assets/framework.png" alt="TFM-Tokenizer Framework" loading="lazy">
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <section>
+    <div class="container fade-in">
+      <div class="section-label">Key Contributions</div>
+      <div class="figure-wrapper" style="margin-top:24px">
+      <img src="assets/key_benefits.png" alt="TFM-Tokenizer contributions" loading="lazy">
       </div>
     </div>
   </section>
 
-  <!-- ════════════ RESULTS FIGURE ════════════ -->
-  <section class="highlights-section">
-    <div class="container wide fade-in">
-      <p class="section-label">Results</p>
-      <h2>Token Analysis &amp; Visualization</h2>
-      <p style="color: var(--text-secondary); margin-bottom: 8px;">
-        Learned tokens exhibit strong class-discriminative, frequency-aware, and consistent structure, capturing
-        physiologically meaningful EEG motifs as discrete tokens.
-      </p>
-      <div class="figure-wrapper">
-        <!-- Replace the placeholder below with your token visualization figure -->
-        <div class="img-placeholder">
-          <!-- TO USE: replace this div with:
-               <img src="static/images/token_analysis.png" alt="Token Analysis Results" loading="lazy"> -->
-          Replace with your results/token visualization figure &mdash; e.g. <code>static/images/token_analysis.png</code>
+  <div class="divider"></div>
+
+  <section>
+    <div class="container fade-in quick-start">
+      <div class="section-label">Quick Start</div>
+
+      <h3>Installation</h3>
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-dot r"></span><span class="code-dot y"></span><span class="code-dot g"></span>
+          <span style="margin-left:8px;color:#94a3b8;font-size:11px;font-family:var(--sans);font-weight:600">bash</span>
         </div>
-        <p class="figure-caption">
-          <strong>Figure 2.</strong> Token analysis showing class-discriminative and frequency-aware structure of the learned discrete tokens.
-        </p>
+        <pre class="code-body">pip install torch einops linear_attention_transformer huggingface_hub</pre>
+      </div>
+
+      <p style="margin-top:18px;color:var(--text-secondary);font-size:15px">Clone the source repository for model definitions and utilities:</p>
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-dot r"></span><span class="code-dot y"></span><span class="code-dot g"></span>
+          <span style="margin-left:8px;color:#94a3b8;font-size:11px;font-family:var(--sans);font-weight:600">bash</span>
+        </div>
+        <pre class="code-body">git clone https://github.com/Jathurshan0330/TFM-Tokenizer.git
+cd TFM-Tokenizer</pre>
+      </div>
+
+      <hr>
+
+      <h3>1. Load the pretrained TFM-Tokenizer</h3>
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-dot r"></span><span class="code-dot y"></span><span class="code-dot g"></span>
+          <span style="margin-left:8px;color:#94a3b8;font-size:11px;font-family:var(--sans);font-weight:600">Python</span>
+        </div>
+        <pre class="code-body">import torch
+from huggingface_hub import hf_hub_download
+from models.tfm_token import get_tfm_tokenizer_2x2x8
+from utils.utils import get_stft_torch
+
+ckpt = hf_hub_download(repo_id="Jathurshan/TFM-Tokenizer", filename="pretrained/tfm_tokenizer_last.pth")
+tokenizer = get_tfm_tokenizer_2x2x8(code_book_size=8192, emb_size=64)
+tokenizer.load_state_dict(torch.load(ckpt, map_location="cpu"))
+tokenizer.eval()</pre>
+      </div>
+
+      <h3>2. Load the MTP-pretrained TFM-Encoder (for finetuning on a new task)</h3>
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-dot r"></span><span class="code-dot y"></span><span class="code-dot g"></span>
+          <span style="margin-left:8px;color:#94a3b8;font-size:11px;font-family:var(--sans);font-weight:600">Python</span>
+        </div>
+        <pre class="code-body">import torch
+from huggingface_hub import hf_hub_download
+from models.tfm_token import get_tfm_token_classifier_64x4
+
+ckpt = hf_hub_download(repo_id="Jathurshan/TFM-Tokenizer", filename="pretrained/tfm_encoder_mtp_last.pth")
+model = get_tfm_token_classifier_64x4(n_classes=YOUR_NUM_CLASSES, code_book_size=8192, emb_size=64)
+
+checkpoint = torch.load(ckpt, map_location="cpu")
+filtered = {k: v for k, v in checkpoint.items() if "classification_head" not in k}
+model.load_state_dict(filtered, strict=False)
+# classification_head is randomly initialized — finetune on your data</pre>
+      </div>
+
+      <h3>3. Load a finetuned checkpoint (for direct inference)</h3>
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-dot r"></span><span class="code-dot y"></span><span class="code-dot g"></span>
+          <span style="margin-left:8px;color:#94a3b8;font-size:11px;font-family:var(--sans);font-weight:600">Python</span>
+        </div>
+        <pre class="code-body">from huggingface_hub import hf_hub_download
+from models.tfm_token import get_tfm_token_classifier_64x4
+import torch
+
+# Example: TUEV dataset, seed 1
+ckpt = hf_hub_download(repo_id="Jathurshan/TFM-Tokenizer", filename="finetuned/TUEV/seed_1/best_model.pth")
+model = get_tfm_token_classifier_64x4(n_classes=6, code_book_size=8192, emb_size=64)
+model.load_state_dict(torch.load(ckpt, map_location="cpu"))
+model.eval()</pre>
+      </div>
+      <p style="margin-top:12px;color:var(--text-secondary);font-size:14.5px">Dataset-specific <code style="font-family:var(--mono);font-size:13px;background:var(--bg-alt);padding:2px 6px;border-radius:4px">n_classes</code>:</p>
+      <ul>
+        <li><strong>TUEV</strong>: <code style="font-family:var(--mono);font-size:12.5px">n_classes=6</code> (multi-class)</li>
+        <li><strong>TUAB</strong>: <code style="font-family:var(--mono);font-size:12.5px">n_classes=1</code> (binary, use sigmoid)</li>
+        <li><strong>CHBMIT</strong>: <code style="font-family:var(--mono);font-size:12.5px">n_classes=1</code> (binary, use sigmoid)</li>
+      </ul>
+
+      <hr>
+
+      <h3>4. Full inference pipeline</h3>
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-dot r"></span><span class="code-dot y"></span><span class="code-dot g"></span>
+          <span style="margin-left:8px;color:#94a3b8;font-size:11px;font-family:var(--sans);font-weight:600">Python</span>
+        </div>
+        <pre class="code-body">import torch
+from einops import rearrange
+from huggingface_hub import hf_hub_download
+from models.tfm_token import get_tfm_tokenizer_2x2x8, get_tfm_token_classifier_64x4
+from utils.utils import get_stft_torch
+
+# Load tokenizer
+tok_ckpt = hf_hub_download(repo_id="Jathurshan/TFM-Tokenizer", filename="pretrained/tfm_tokenizer_last.pth")
+tokenizer = get_tfm_tokenizer_2x2x8(code_book_size=8192, emb_size=64)
+tokenizer.load_state_dict(torch.load(tok_ckpt, map_location="cpu"))
+tokenizer.eval()
+
+# Load finetuned encoder (e.g. TUEV seed 1)
+enc_ckpt = hf_hub_download(repo_id="Jathurshan/TFM-Tokenizer", filename="finetuned/TUEV/seed_1/best_model.pth")
+encoder = get_tfm_token_classifier_64x4(n_classes=6, code_book_size=8192, emb_size=64)
+encoder.load_state_dict(torch.load(enc_ckpt, map_location="cpu"))
+encoder.eval()
+
+# Inference on raw EEG: x shape (B, C, T) at 200 Hz
+x_temporal = x
+B, C, T = x_temporal.shape
+x_stft = get_stft_torch(x_temporal, resampling_rate=200)
+x_stft = rearrange(x_stft, 'B C F T -> (B C) F T')
+x_temporal_flat = rearrange(x_temporal, 'B C T -> (B C) T')
+
+with torch.no_grad():
+    _, x_tokens, _ = tokenizer.tokenize(x_stft, x_temporal_flat)
+    x_tokens = rearrange(x_tokens, '(B C) T -> B C T', C=C)
+    preds = encoder(x_tokens, num_ch=C)</pre>
       </div>
     </div>
   </section>
 
-  <!-- ════════════ CITATION ════════════ -->
+  <div class="divider"></div>
+  
+
   <section class="citation-section" id="citation">
     <div class="container fade-in">
-      <p class="section-label">Citation</p>
-      <h2>BibTeX</h2>
-      <p style="color: var(--text-secondary); margin-bottom: 16px;">
-        If you find our work useful, please consider citing:
-      </p>
-      <div class="citation-block" id="bibtex">@inproceedings{pradeepkumar2026tokenizing,
-  title={Tokenizing Single-Channel EEG with Time-Frequency Motif Learning},
-  author={Pradeepkumar, Jathurshan and Piao, Xihao and Chen, Zheng and Sun, Jimeng},
-  booktitle={International Conference on Learning Representations (ICLR)},
-  year={2026},
-  url={https://arxiv.org/abs/2502.16060}
-}</div>
-      <button class="copy-btn" onclick="copyBibtex()">
-        <i class="fas fa-copy"></i> Copy
-      </button>
+      <div class="section-label">Citation</div>
+      <!-- <h2>BibTeX</h2> -->
+      <p style="color:var(--text-secondary);margin-bottom:14px;font-size:14px">If you find our work useful, please consider giving a &#11088; on <a href="https://github.com/Jathurshan0330/TFM-Tokenizer" target="_blank" style="color:var(#000000);text-decoration:none;font-weight:600">GitHub</a> and citing our paper:</p>
+      <div class="citation-wrap">
+        <pre class="citation-block" id="bibtex">@inproceedings{
+          pradeepkumar2026tokenizing,
+          title={Tokenizing Single-Channel {EEG} with Time-Frequency Motif Learning},
+          author={Jathurshan Pradeepkumar and Xihao Piao and Zheng Chen and Jimeng Sun},
+          booktitle={The Fourteenth International Conference on Learning Representations},
+          year={2026},
+          url={https://openreview.net/forum?id=2sPmWHZ8Ir}
+          }</pre>
+        <button class="copy-btn" onclick="copyBibtex()"><i class="fas fa-copy"></i> Copy</button>
+      </div>
     </div>
   </section>
 
-  <!-- ════════════ FOOTER ════════════ -->
   <footer>
-    <div class="container">
-      <p>
-        TFM-Tokenizer &copy; 2026 &middot;
-        <a href="https://github.com/Jathurshan0330/TFM-Tokenizer" target="_blank">GitHub</a> &middot;
-        <a href="https://arxiv.org/abs/2502.16060" target="_blank">arXiv</a>
-      </p>
-      <p style="margin-top: 8px; font-size: 12px; color: #999;">
-        Template adapted from the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project Page Template</a>.
-      </p>
+    <div class="footer-icons">
+      <a href="https://github.com/Jathurshan0330/TFM-Tokenizer" target="_blank"><i class="fab fa-github"></i></a>
+      <a href="https://arxiv.org/abs/2502.16060" target="_blank"><i class="ai ai-arxiv"></i></a>
+      <a href="https://openreview.net/forum?id=2sPmWHZ8Ir" target="_blank"><i class="ai ai-openreview"></i></a>
+      <a href="https://huggingface.co/Jathurshan/TFM-Tokenizer" target="_blank">&#129303;</a>
     </div>
+    <p>TFM-Tokenizer &copy; 2026 &middot; MIT License</p>
   </footer>
 
   <script>
-    // ── Copy BibTeX ──
-    function copyBibtex() {
-      const text = document.getElementById('bibtex').textContent;
-      navigator.clipboard.writeText(text).then(() => {
-        const btn = document.querySelector('.copy-btn');
-        btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
-        setTimeout(() => {
-          btn.innerHTML = '<i class="fas fa-copy"></i> Copy';
-        }, 2000);
-      });
-    }
-
-    // ── Scroll fade-in ──
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    }, { threshold: 0.15 });
-
-    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    function copyBibtex(){const t=document.getElementById('bibtex').textContent;navigator.clipboard.writeText(t).then(()=>{const b=document.querySelector('.copy-btn');b.innerHTML='<i class="fas fa-check"></i> Copied!';b.style.color='var(--accent)';b.style.borderColor='var(--accent)';setTimeout(()=>{b.innerHTML='<i class="fas fa-copy"></i> Copy';b.style.color='';b.style.borderColor=''},2000)})}
+    const obs=new IntersectionObserver(e=>{e.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')})},{threshold:.1});document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+    (function(){const c=document.getElementById('eegCanvas'),x=c.getContext('2d');let w,h,f=0;function r(){const d=window.devicePixelRatio||1,b=c.parentElement.getBoundingClientRect();w=b.width;h=b.height;c.width=w*d;c.height=h*d;c.style.width=w+'px';c.style.height=h+'px';x.scale(d,d)}const ch=[];function init(){ch.length=0;const n=5,cols=['rgba(13,148,136,','rgba(59,130,246,','rgba(124,58,237,','rgba(245,158,11,','rgba(16,185,129,'];for(let i=0;i<n;i++)ch.push({y:(h/(n+1))*(i+1),f1:.007+Math.random()*.012,a1:10+Math.random()*16,p:Math.random()*Math.PI*2,f2:.025+Math.random()*.035,a2:3+Math.random()*7,s:.35+Math.random()*.5,col:cols[i],al:.3+Math.random()*.15})}function draw(){x.clearRect(0,0,w,h);f++;for(const e of ch){x.beginPath();x.strokeStyle=e.col+e.al+')';x.lineWidth=1.2;for(let i=0;i<w;i++){const t=f*e.s;const y=e.y+Math.sin((i+t)*e.f1+e.p)*e.a1+Math.sin((i+t*1.3)*e.f2)*e.a2+Math.sin((i+t*.7)*e.f1*3)*e.a1*.25;i===0?x.moveTo(i,y):x.lineTo(i,y)}x.stroke()}requestAnimationFrame(draw)}r();init();draw();window.addEventListener('resize',()=>{r();init()})})();
   </script>
-
 </body>
 </html>
