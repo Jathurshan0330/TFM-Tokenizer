@@ -1,7 +1,7 @@
 # Tokenizing Single-Channel EEG with Time-Frequency Motif Learning - ICLR 2026
 
-[![arXiv](https://img.shields.io/badge/arXiv-2601.22197-b31b1b.svg)](https://arxiv.org/abs/2502.16060)
 [![ICLR 2026](https://img.shields.io/badge/ICLR%202026-Paper-blue)](https://openreview.net/forum?id=2sPmWHZ8Ir)
+[![arXiv](https://img.shields.io/badge/arXiv-2601.22197-b31b1b.svg)](https://arxiv.org/abs/2502.16060)
 [![HuggingFace](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Model-yellow)](https://huggingface.co/Jathurshan/TFM-Tokenizer)
 [![Poster](https://img.shields.io/badge/Poster-PDF-F5A623.svg)](https://drive.google.com/file/d/18k5CoJAGzRWAsqs8-qSltVTNkp5rMnBx/view?usp=sharing)
 [![Slides](https://img.shields.io/badge/Slides-PDF-F5A623.svg)](https://drive.google.com/file/d/1za78WIW4wY9kD_TQtehQCzUTIW4CRYx-/view?usp=sharing)
